@@ -3,7 +3,7 @@
 2) Update ethereum.enable
 3) Create an animation for the transaction picture.pulse?
 4) Flesh out UI consider Bridge UI as examples
-5.) */
+5.) Research persistent local storage and use of nonces */
 
 import React, { Component } from "react";
 import Web3 from "web3";

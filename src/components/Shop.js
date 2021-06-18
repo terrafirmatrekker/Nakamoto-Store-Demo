@@ -1,7 +1,8 @@
 /* TODOs
 1) Fix window.ethereum and ethereum.enable 
 2) Change to componentDidMount
-3)
+3) Fix the issue with account # missing(props issue)
+4)
  */
 
 import React, { Component } from "react";
