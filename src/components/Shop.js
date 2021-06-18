@@ -1,20 +1,16 @@
+/* TODOs
+1) Fix window.ethereum and ethereum.enable 
+2) Change to componentDidMount
+3)
+ */
+
 import React, { Component } from "react";
 import Web3 from "web3";
 import Marketplace from "../abis/Marketplace.json";
-import Header from "./Header";
 import Main from "./Main";
 
-// class dapp extends React.Component {
-//   render() {
-//     return  (
-//       <div className="bridge">test
-//       <Renapp /></div>
-//     )
-//   }
-// }
-
 class Shop extends Component {
-  async componentWillMount() {
+  async componentDidMount() {
     await this.loadWeb3();
     await this.loadBlockchainData();
   }

@@ -1,3 +1,7 @@
+/* TODOs
+1) This part is so disconected with the rest, try to integrate this into project better. 
+2) 
+ */
 import React, { Component } from "react";
 
 class Main extends Component {

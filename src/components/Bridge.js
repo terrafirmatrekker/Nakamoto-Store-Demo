@@ -1,15 +1,21 @@
+/* TODOS 
+1) Need to work on resuming transfers and chaining 
+2) Update ethereum.enable
+3) Create an animation for the transaction picture.pulse?
+4) Flesh out UI consider Bridge UI as examples
+5.) */
+
 import React, { Component } from "react";
 import Web3 from "web3";
 // Need to correct RenJS tutorial BTC/ETH imports with newest NPM file hyphen
 import RenJS from "@renproject/ren";
 import { Bitcoin } from "@renproject/chains-bitcoin";
 import { Ethereum } from "@renproject/chains-ethereum";
-// import { ethers } from "ethers";
 import "./App.css";
 import ABI from "../abis/ABI.json";
 
 // Replace with your contract's address.
-const contractAddress = "0x32533e63125BE2581f1954DCC3fa80e3265879d3";
+const contractAddress = "0x3Aa969d343BD6AE66c4027Bb61A382DC96e88150";
 
 class App extends Component {
   constructor(props) {
@@ -111,7 +117,7 @@ class App extends Component {
         
             // The name of the function we want to call
             contractFn: "deposit",
-            nonce: renJS.utils.randomNonce(),
+            // nonce: renJS.utils.randomNonce(),
         
             // Arguments expected for calling `deposit`
             contractParams: [
