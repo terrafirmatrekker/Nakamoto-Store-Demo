@@ -1,0 +1,15 @@
+/* Styles go here */
+.row {
+    margin-top: 2em;
+}
+
+.App {
+    text-align: center;
+    padding: 10px;
+    font-family: 'Courier New', Courier, monospace;
+    width: 700px;
+    margin: auto;
+    margin-top: 5%;
+    /* overflow: hidden; */
+    color: #000000;
+  }
