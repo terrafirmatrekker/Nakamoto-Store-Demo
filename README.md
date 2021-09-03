@@ -1,2 +1,3 @@
-# marketplace2
- A Web3 inspired Shop with Interoperability
+# Marketplace
+ A Web3 inspired Shop with Interoperability via integration of RenJS
+ 
