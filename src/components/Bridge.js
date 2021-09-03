@@ -13,9 +13,11 @@ import { Bitcoin } from "@renproject/chains-bitcoin";
 import { Ethereum } from "@renproject/chains-ethereum";
 import "./App.css";
 import ABI from "../abis/ABI.json";
+import ERC20 from "../abis/ERC20.json";
+
 
 // Replace with your contract's address.
-const contractAddress = "0x3Aa969d343BD6AE66c4027Bb61A382DC96e88150";
+const contractAddress = "0x7e5c5fc517ad27070faf8b2ac05d06bf0250332d";
 
 class App extends Component {
   constructor(props) {
@@ -77,7 +79,7 @@ class App extends Component {
     return (
       <div className="App">
         <p>Balance: {balance} BTC</p>
-        <p><button onClick={() => this.deposit().catch(this.logError)}>Deposit 0.003 BTC</button></p>
+        <p><button onClick={() => this.deposit().catch(this.logError)}>Deposit 0.0001 BTC</button></p>
         <p><button onClick={() => this.withdraw().catch(this.logError)}>Withdraw {balance} BTC</button></p>
         <p>{message}</p>
         {error ? <p style={{ color: "red" }}>{error}</p> : null}
@@ -87,8 +89,11 @@ class App extends Component {
 
   updateBalance = async () => {
     const { web3 } = this.state;
-    const contract = new web3.eth.Contract(ABI, contractAddress);
-    const balance = await contract.methods.balance().call();
+    const ETH = await Ethereum(web3.currentProvider).initialize("testnet");
+    const testBTC = await ETH.getTokenContractAddress("BTC");
+    const contract = new web3.eth.Contract(ERC20, testBTC);
+    const addresses = await web3.eth.getAccounts();
+    const balance = await contract.methods.balanceOf(addresses[0]).call();
     this.setState({ balance: parseInt(balance.toString()) / 10 ** 8 });
   }
 
@@ -106,7 +111,8 @@ class App extends Component {
 
     const { web3, renJS } = this.state;
 
-    const amount = 0.003; // BTC
+    const amount = 0.0001; // BTC
+    const addresses = await web3.eth.getAccounts();
     const mint = await renJS.lockAndMint({
         // Send BTC from the Bitcoin blockchain to the Ethereum blockchain.
         asset: "BTC",
@@ -116,16 +122,21 @@ class App extends Component {
             sendTo: contractAddress,
         
             // The name of the function we want to call
-            contractFn: "deposit",
+            contractFn: "mint",
             // nonce: renJS.utils.randomNonce(),
         
             // Arguments expected for calling `deposit`
             contractParams: [
                 {
-                    name: "_msg",
-                    type: "bytes",
-                    value: Buffer.from(`Depositing ${amount} BTC`),
-                }
+                    name:  "_symbol",
+                    type: "string",
+                    value: "BTC",
+                }, 
+                {
+                  name:  "_recipient",
+                  type: "address",
+                  value: addresses[0]
+              }
             ],
         }),
     });
@@ -166,29 +177,7 @@ class App extends Component {
         // Send BTC from Ethereum back to the Bitcoin blockchain.
         asset: "BTC",
         to: Bitcoin().Address(recipient),
-        from: Ethereum(web3.currentProvider).Contract((btcAddress) => ({
-            sendTo: contractAddress,
-            
-            contractFn: "withdraw",
-            
-            contractParams: [
-                {
-                    type: "bytes",
-                    name: "_msg",
-                    value: Buffer.from(`Withdrawing ${amount} BTC`),
-                },
-                {
-                    type: "bytes",
-                    name: "_to",
-                    value: Buffer.from(btcAddress),
-                },
-                {
-                    type: "uint256",
-                    name: "_amount",
-                    value: RenJS.utils.toSmallestUnit(amount, 8),
-                },
-            ],
-        })),
+        from: Ethereum(web3.currentProvider).Account({value: balance}),
     });
     
     let confirmations = 0;
